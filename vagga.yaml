@@ -1,0 +1,14 @@
+containers:
+
+  py:
+    setup:
+    - !Alpine v3.4
+    - !Py3Install [pip]
+    - !Sh "pip install -e ."
+
+commands:
+
+  test.py: !Command
+    description: Run the only available example so far
+    container: py
+    run: [python3, test.py]

@@ -1,0 +1,5 @@
+smtp:
+    server: mail.example.org
+    port: unknown
+    ssl_port: NaN
+port: ???
