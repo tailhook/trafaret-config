@@ -53,7 +53,7 @@ class ConfigError(Exception):
     def __init__(self, list_of_errors):
         self.errors = list_of_errors
         # Show first error in a context where one line is desired
-        super().__init__(self.errors[0])
+        super(ConfigError, self).__init__(self.errors[0])
 
     @classmethod
     def from_data_error(ConfigError, err, orig_data):
