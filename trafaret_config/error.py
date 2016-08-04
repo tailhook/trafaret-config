@@ -59,7 +59,7 @@ class ConfigError(Exception):
         errs.sort(key=_mark_sort_key)
         return ConfigError(errs)
 
-    def print(self, stream=None):
+    def output(self, stream=None):
         if stream is None:
             stream = sys.stderr
         for err in self.errors:

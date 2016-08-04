@@ -13,7 +13,7 @@ def get_err(trafaret, text):
         config = parse_and_validate(text, trafaret, filename='config.yaml')
     except ConfigError as e:
         buf = StringIO()
-        e.print(buf)
+        e.output(buf)
         return buf.getvalue()
 
 

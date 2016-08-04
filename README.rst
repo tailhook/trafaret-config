@@ -22,7 +22,7 @@ Basic Usage:
    try:
        config = read_and_validate('config.yaml', TRAFARET)
    except ConfigError as e:
-       e.print()
+       e.output()
        sys.exit(1)
 
 
