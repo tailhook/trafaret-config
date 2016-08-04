@@ -29,7 +29,7 @@ class TestSMTP(unittest.TestCase):
     })
 
     def test_bad(self):
-        self.assertEqual(get_err(self.TRAFARET, """
+        self.assertEqual(get_err(self.TRAFARET, u"""
             smtp:
                 server: mail.example.org
                 port: unknown
@@ -49,14 +49,14 @@ class TestList(unittest.TestCase):
     })
 
     def test_ok(self):
-        self.assertEqual(get_err(self.TRAFARET, """\
+        self.assertEqual(get_err(self.TRAFARET, u"""\
             hosts:
             - bear:8080
             - cat:7070
             """), None)
 
     def test_err(self):
-        self.assertEqual(get_err(self.TRAFARET, """\
+        self.assertEqual(get_err(self.TRAFARET, u"""\
                 hosts:
                 - bear:8080
                 - cat:x
