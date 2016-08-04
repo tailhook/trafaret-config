@@ -1,6 +1,9 @@
 import sys
+import pprint
+import argparse
 import trafaret as T
 from trafaret_config import read_and_validate, ConfigError
+from trafaret_config import commandline
 
 TRAFARET = T.Dict({
     T.Key('port'): T.Int(),
@@ -11,9 +14,13 @@ TRAFARET = T.Dict({
     }),
 })
 
-try:
-    config = read_and_validate('bad.yaml', TRAFARET)
-except ConfigError as e:
-    e.output()
-    sys.exit(1)
 
+def main():
+    ap = argparse.ArgumentParser()
+    commandline.standard_argparse_options(ap, default_config='config.yaml')
+    options = ap.parse_args()
+    config = commandline.config_from_options(options, TRAFARET)
+    pprint.pprint(config)
+
+if __name__ == '__main__':
+    main()
