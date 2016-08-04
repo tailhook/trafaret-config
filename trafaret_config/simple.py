@@ -19,6 +19,14 @@ class ConfigDict(dict):
         self.marks = marks
 
 
+class ConfigList(list):
+    __slots__ = ('marks',)
+
+    def __init__(self, data, marks):
+        list.__init__(self, data)
+        self.marks = marks
+
+
 class ConfigLoader(SafeLoader):
 
     def __init__(self, stream):
@@ -35,11 +43,23 @@ class ConfigLoader(SafeLoader):
                     key.start_mark, value.end_mark]
         data.marks = marks
 
+    def construct_yaml_seq(self, node):
+        data = ConfigList([], {})
+        yield data
+        data.extend(self.construct_sequence(node))
+        marks = {'__self__': [node.start_mark, node.end_mark]}
+        for idx, value in enumerate(node.value):
+            marks[idx] = [value.start_mark, value.end_mark]
+        data.marks = marks
+
 
 ConfigLoader.add_constructor(
         'tag:yaml.org,2002:map',
         ConfigLoader.construct_yaml_map)
 
+ConfigLoader.add_constructor(
+        'tag:yaml.org,2002:seq',
+        ConfigLoader.construct_yaml_seq)
 
 def read_and_validate(filename, trafaret):
     with open(filename) as input:

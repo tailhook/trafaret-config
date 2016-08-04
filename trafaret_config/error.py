@@ -28,10 +28,12 @@ class ErrorLine(object):
 
 def _convert(parent_marks, prefix, err, data):
     for key, suberror in err.error.items():
-        if prefix:
-            kprefix = prefix + '.' + key
+        if isinstance(key, int):
+            kprefix = prefix + '[{}]'.format(key)
+        elif prefix:
+            kprefix = prefix + '.' + str(key)
         else:
-            kprefix = key
+            kprefix = str(key)
         marks = data.marks.get(key)
         if isinstance(suberror.error, dict):
             for e in _convert(marks, kprefix, suberror, data.get(key)):
