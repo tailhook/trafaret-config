@@ -6,7 +6,7 @@ from trafaret_config import read_and_validate, ConfigError
 from trafaret_config import commandline
 
 TRAFARET = T.Dict({
-    T.Key('port'): T.Int(),
+    T.Key('port', default=8080): T.Int(),
     T.Key('smtp'): T.Dict({
         'server': T.String(),
         'port': T.Int(),
