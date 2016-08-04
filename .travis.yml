@@ -4,5 +4,5 @@ python:
   - "3.2"
   - "3.3"
   - "3.4"
-install: "pip install trafaret"
+install: "pip install -e ."
 script: nosetests
