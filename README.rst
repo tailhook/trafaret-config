@@ -3,7 +3,7 @@ Configuration Loader
 ====================
 
 
-:Status: Proof of Concept
+:Status: Alpha
 
 
 This is a wrapper that loads yaml and checks config using trafaret_ while
