@@ -1,5 +1,6 @@
 from weakref import WeakKeyDictionary
 
+from io import StringIO
 import trafaret as _trafaret
 from yaml import load, dump, ScalarNode
 try:
@@ -47,6 +48,21 @@ def read_and_validate(filename, trafaret):
             data = loader.get_single_data()
         finally:
             loader.dispose()
+
+    try:
+        return trafaret.check(data)
+    except _trafaret.DataError as e:
+        raise ConfigError.from_data_error(e, data)
+
+
+def parse_and_validate(string, trafaret, filename='<config.yaml>'):
+    input = StringIO(string)
+    input.name = filename
+    loader = ConfigLoader(input)
+    try:
+        data = loader.get_single_data()
+    finally:
+        loader.dispose()
 
     try:
         return trafaret.check(data)

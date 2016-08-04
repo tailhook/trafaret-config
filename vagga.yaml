@@ -8,7 +8,12 @@ containers:
 
 commands:
 
-  test.py: !Command
+  test: !Command
     description: Run the only available example so far
     container: py
-    run: [python3, test.py]
+    run: [python3, -m, unittest, discover]
+
+  example: !Command
+    description: Run the only available example so far
+    container: py
+    run: [python3, example.py]
