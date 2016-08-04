@@ -65,4 +65,4 @@ class ConfigError(Exception):
         if stream is None:
             stream = sys.stderr
         for err in self.errors:
-            stream.write(str(err) + '\n')
+            stream.write(str(err) + u'\n')
