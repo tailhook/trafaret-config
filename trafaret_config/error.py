@@ -1,12 +1,8 @@
 import sys
+from collections import namedtuple
 
 
 MAX = float('inf')
-
-
-class unknown_mark(object):
-    name = '?'
-    line = '?'
 
 
 class ErrorLine(object):
@@ -16,14 +12,26 @@ class ErrorLine(object):
         if marks:
             self.start_mark, self.end_mark = marks
         else:
-            self.start_mark, self.end_mark = unknown_mark, unknown_mark
+            self.start_mark = None
+            self.end_mark = None
         self.path = path
         self.message = message
 
     def __str__(self):
-        return '{}:{}: {}: {}'.format(
-            self.start_mark.name, self.start_mark.line,
-            self.path, self.message)
+        if self.start_mark:
+            if self.path:
+                return '{}:{}: {}: {}'.format(
+                    self.start_mark.name, self.start_mark.line+1,
+                    self.path, self.message)
+            else:
+                return '{}:{}: {}'.format(
+                    self.start_mark.name, self.start_mark.line+1,
+                    self.message)
+        else:
+            if self.path:
+                return '{}: {}'.format(self.path, self.message)
+            else:
+                return 'CONFIG ERROR: {}'.format(self.message)
 
 
 def _convert(parent_marks, prefix, err, data):
@@ -43,9 +51,10 @@ def _convert(parent_marks, prefix, err, data):
                 marks or data.marks.get('__self__') or parent_marks,
                 kprefix, suberror)
 
+
 def _mark_sort_key(err):
     mark = err.start_mark
-    return (mark.name, mark.line if mark is not unknown_mark else MAX)
+    return (mark.name, mark.line if mark else MAX)
 
 
 class ConfigError(Exception):
@@ -60,6 +69,13 @@ class ConfigError(Exception):
         errs = list(_convert(None, '', err, orig_data))
         errs.sort(key=_mark_sort_key)
         return ConfigError(errs)
+
+    @classmethod
+    def from_scanner_error(ConfigError, err, filename):
+        return ConfigError([
+            ErrorLine([err.problem_mark, err.problem_mark], None, err.problem),
+            ErrorLine([err.problem_mark, err.problem_mark], None, err.context),
+            ])
 
     def output(self, stream=None):
         if stream is None:

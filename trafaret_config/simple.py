@@ -3,6 +3,7 @@ from weakref import WeakKeyDictionary
 from io import StringIO
 import trafaret as _trafaret
 from yaml import load, dump, ScalarNode
+from yaml.scanner import ScannerError
 try:
     from yaml import CSafeLoader as SafeLoader
 except ImportError:
@@ -66,6 +67,8 @@ def read_and_validate(filename, trafaret):
         loader = ConfigLoader(input)
         try:
             data = loader.get_single_data()
+        except ScannerError as e:
+            raise ConfigError.from_scanner_error(e, filename)
         finally:
             loader.dispose()
 
@@ -81,6 +84,8 @@ def parse_and_validate(string, trafaret, filename='<config.yaml>'):
     loader = ConfigLoader(input)
     try:
         data = loader.get_single_data()
+    except ScannerError as e:
+        raise ConfigError.from_scanner_error(e, filename)
     finally:
         loader.dispose()
 

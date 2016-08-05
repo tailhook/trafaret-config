@@ -29,7 +29,7 @@ class TestSMTP(unittest.TestCase):
     })
 
     def test_bad(self):
-        self.assertEqual(get_err(self.TRAFARET, u"""
+        self.assertEqual(get_err(self.TRAFARET, u"""\
             smtp:
                 server: mail.example.org
                 port: unknown
@@ -61,7 +61,22 @@ class TestList(unittest.TestCase):
                 - bear:8080
                 - cat:x
             """),
-                 "config.yaml:2: hosts[1]: "
+                 "config.yaml:3: hosts[1]: "
                  "value does not match pattern: '\\\\w+:\\\\d+'\n"
             )
 
+
+class TestInvalidYaml(unittest.TestCase):
+
+    TRAFARET = T.Dict()
+
+    def test_star(self):
+        self.assertEqual(get_err(self.TRAFARET, u"""\
+            port: 8080
+            host: localhost
+            *: 1
+        """),dedent(
+            "config.yaml:3: expected alphabetic or numeric character, "
+                "but found ':'\n"
+            "config.yaml:3: while scanning an alias\n"
+        ))
