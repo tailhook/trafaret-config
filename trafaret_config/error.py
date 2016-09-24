@@ -1,5 +1,7 @@
 import sys
 from collections import namedtuple
+from collections import defaultdict
+import trafaret
 
 
 MAX = float('inf')
@@ -34,9 +36,52 @@ class ErrorLine(object):
                 return 'CONFIG ERROR: {}'.format(self.message)
 
 
+def _is_simple_or(traf, data):
+    """Simple or is when all subtrafarets are dicts and they are distinguished
+    by a single key which is atom and all it's atom values are distinct
+    """
+    intersect = None
+    dic = defaultdict(list)
+    for child in traf.trafarets:
+        if not isinstance(child, trafaret.Dict):
+            return None, None, None
+        if intersect is None:
+            intersect = set(key.name for key in child.keys)
+        else:
+            intersect.intersection_update(key.name for key in child.keys)
+        for key in child.keys:
+            if key.name in intersect:
+                dic[key.name].append(key.trafaret)
+        if not intersect:
+            return None, None, None
+    key = next(iter(intersect))
+    num_alters = len(traf.trafarets)
+    for key in intersect:
+        if not key in data:
+            # this might somehow be tweaked to shorten alternatives too
+            continue
+        all_atoms = all(isinstance(t, trafaret.Atom) for t in dic[key])
+        if all_atoms:
+            values = [t.value for t in dic[key]]
+            if len(set(values)) == num_alters:
+                return key, data[key], values.index(data[key])
+    return None, None, None
+
 def _convert(parent_marks, prefix, err, data):
+    cur_trafaret = getattr(err, 'trafaret', None)
+    is_alter = isinstance(cur_trafaret, trafaret.Or)
+    if is_alter:
+        key, value, index = _is_simple_or(cur_trafaret, data)
+        if key:
+            suberror = err.error[index]
+            for e in _convert(parent_marks, prefix, suberror, data.get(key)):
+                yield ErrorLine([e.start_mark, e.end_mark], e.path,
+                    '{} (where .{} is {!r})'.format(e.message, key, value))
+            return
     for key, suberror in err.error.items():
-        if isinstance(key, int):
+        if is_alter:
+            kprefix = prefix + '.<alternative {}>'.format(key+1)
+        elif isinstance(key, int):
             kprefix = prefix + '[{}]'.format(key)
         elif prefix:
             kprefix = prefix + '.' + str(key)
@@ -46,7 +91,11 @@ def _convert(parent_marks, prefix, err, data):
         marks = (cmarks.get(key) or cmarks.get(str(key)) or
                  cmarks.get('__self__') or parent_marks)
         if isinstance(getattr(suberror, 'error', None), dict):
-            for e in _convert(marks, kprefix, suberror, data.get(key)):
+            if is_alter:
+                cur_data = data
+            else:
+                cur_data = data.get(key)
+            for e in _convert(marks, kprefix, suberror, cur_data):
                 yield e
         else:
             yield ErrorLine(marks, kprefix, suberror)
