@@ -1,14 +1,31 @@
 containers:
 
-  py:
+  py3:
     setup:
     - !Alpine v3.4
+    - !Install [ca-certificates]
     - !Py3Install [pip]
     - !Sh "pip install -e ."
 
   py2:
     setup:
     - !Alpine v3.4
+    - !Py2Install [pip, setuptools]
+    - !Sh "pip install -e ."
+
+  py3_c:
+    setup:
+    - !Alpine v3.4
+    - !BuildDeps [build-base, yaml-dev]
+    - !Install [ca-certificates, yaml]
+    - !Py3Install [pip]
+    - !Sh "pip install -e ."
+
+  py2_c:
+    setup:
+    - !Alpine v3.4
+    - !BuildDeps [build-base, yaml-dev]
+    - !Install [ca-certificates, yaml]
     - !Py2Install [pip, setuptools]
     - !Sh "pip install -e ."
 
@@ -25,18 +42,34 @@ containers:
 commands:
 
   test: !Command
-    description: Run the only available example so far
-    container: py
+    description: Run all the tests
+    container: py3
+    prerequisites: [test-py2, test-py2c, test-py3, test-py3c]
+    run: [echo, 'ok']
+
+  test-py2c: !Command
+    description: Run tests for py2 with C speedups
+    container: py2_c
+    run: [python2, -m, unittest, discover]
+
+  test-py3c: !Command
+    description: Run tests for py3 with C speedups
+    container: py3_c
     run: [python3, -m, unittest, discover]
 
   test-py2: !Command
-    description: Run the only available example so far
+    description: Run tests for py2 (without C speedups)
     container: py2
     run: [python2, -m, unittest, discover]
 
+  test-py3: !Command
+    description: Run tests for py3 (without C speedups)
+    container: py3
+    run: [python3, -m, unittest, discover]
+
   example: !Command
     description: Run the only available example so far
-    container: py
+    container: py3
     run: [python3, example.py]
 
   doc: !Command
