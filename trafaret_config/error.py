@@ -52,12 +52,12 @@ def _convert(parent_marks, prefix, err, data):
             yield ErrorLine(marks, kprefix, suberror)
 
 
-def _mark_sort_key(err):
+def _err_sort_key(err):
     mark = err.start_mark
     if mark:
-        return mark.name, mark.line
+        return mark.name, mark.line, err.path
     else:
-        return 'zzzzzzzzzzzzzzz', MAX
+        return 'zzzzzzzzzzzzzzz', MAX, err.path
 
 
 class ConfigError(Exception):
@@ -70,7 +70,7 @@ class ConfigError(Exception):
     @classmethod
     def from_data_error(ConfigError, err, orig_data):
         errs = list(_convert(None, '', err, orig_data))
-        errs.sort(key=_mark_sort_key)
+        errs.sort(key=_err_sort_key)
         return ConfigError(errs)
 
     @classmethod
