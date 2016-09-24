@@ -59,12 +59,18 @@ class TestInvalidYaml(unittest.TestCase):
     TRAFARET = T.Dict()
 
     def test_star(self):
-        self.assertEqual(get_err(self.TRAFARET, u"""\
-            port: 8080
-            host: localhost
-            *: 1
-        """),dedent(
-            "config.yaml:3: expected alphabetic or numeric character, "
-                "but found ':'\n"
-            "config.yaml:3: while scanning an alias\n"
-        ))
+        self.assertIn(get_err(self.TRAFARET, u"""\
+                port: 8080
+                host: localhost
+                *: 1
+            """),{
+            # message depends on whether we use libyaml (C speedups) or not
+            dedent(  # with C speedups
+                "config.yaml:3: did not find expected alphabetic or "
+                    "numeric character\n"
+                "config.yaml:3: while scanning an alias\n"
+            ), dedent(  # without C speedups
+                "config.yaml:3: expected alphabetic or numeric character, "
+                    "but found ':'\n"
+                "config.yaml:3: while scanning an alias\n"
+            )})
