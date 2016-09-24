@@ -40,4 +40,5 @@ Installation
 ============
 
 ::
-    pip install trafaret_config@0.1.0
+
+    pip install trafaret-config@0.1.0
