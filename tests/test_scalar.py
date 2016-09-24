@@ -15,6 +15,7 @@ class TestScalar(unittest.TestCase):
         T.Key("a_int", optional=True): T.Int,
         T.Key("a_atom_str", optional=True): T.Atom("hello"),
         T.Key("a_atom_list", optional=True): T.Atom(["x", "y"]),
+        T.Key("a_enum_str", optional=True): T.Enum(["x", "y"]),
         T.Key("a_str", optional=True): T.String(max_length=12),
         T.Key("a_email", optional=True): T.Email(),
         T.Key("a_url", optional=True): T.URL(),
@@ -60,6 +61,13 @@ class TestScalar(unittest.TestCase):
             a_atom_list: "xxx"
         """), dedent(u"""\
             config.yaml:2: a_atom_list: value is not exactly '['x', 'y']'
+        """))
+
+    def test_enum_str(self):
+        self.assertEqual(get_err(self.TRAFARET, u"""
+            a_enum_str: "hello"
+        """), dedent(u"""\
+            config.yaml:2: a_enum_str: value doesn't match any variant
         """))
 
     def test_string(self):
