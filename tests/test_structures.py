@@ -46,3 +46,19 @@ class TestMapping(unittest.TestCase):
             config.yaml:4: items.b.value: value is not a string
             config.yaml:5: items[3].key: value is not a string
         """))
+
+
+class TestTuple(unittest.TestCase):
+
+    TRAFARET = T.Dict({
+        T.Key("tuple", optional=True): T.Tuple(T.String(), T.Int()),
+    })
+
+    def test_items(self):
+        self.assertEqual(get_err(self.TRAFARET, u"""
+            tuple:
+            - "hello"
+            - "world"
+        """), dedent(u"""\
+            config.yaml:4: tuple[1]: value can't be converted to int
+        """))
