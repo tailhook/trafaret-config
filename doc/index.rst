@@ -11,6 +11,7 @@ while keeping track of actual lines of file where error has happened.
 
 Additionally, it can pretty print the error.
 
+
 Contents
 --------
 
@@ -19,6 +20,8 @@ Contents
 
    simple_api
    error
+   commandline
+
 
 Basic Usage
 -----------
