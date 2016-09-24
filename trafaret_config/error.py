@@ -45,7 +45,7 @@ def _convert(parent_marks, prefix, err, data):
         cmarks = getattr(data, 'marks', {})
         marks = (cmarks.get(key) or cmarks.get(str(key)) or
                  cmarks.get('__self__') or parent_marks)
-        if isinstance(suberror.error, dict):
+        if isinstance(getattr(suberror, 'error', None), dict):
             for e in _convert(marks, kprefix, suberror, data.get(key)):
                 yield e
         else:
