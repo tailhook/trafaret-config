@@ -42,19 +42,22 @@ def _convert(parent_marks, prefix, err, data):
             kprefix = prefix + '.' + str(key)
         else:
             kprefix = str(key)
-        marks = data.marks.get(key)
+        cmarks = getattr(data, 'marks', {})
+        marks = (cmarks.get(key) or cmarks.get(str(key)) or
+                 cmarks.get('__self__') or parent_marks)
         if isinstance(suberror.error, dict):
             for e in _convert(marks, kprefix, suberror, data.get(key)):
                 yield e
         else:
-            yield ErrorLine(
-                marks or data.marks.get('__self__') or parent_marks,
-                kprefix, suberror)
+            yield ErrorLine(marks, kprefix, suberror)
 
 
 def _mark_sort_key(err):
     mark = err.start_mark
-    return (mark.name, mark.line if mark else MAX)
+    if mark:
+        return mark.name, mark.line
+    else:
+        return 'zzzzzzzzzzzzzzz', MAX
 
 
 class ConfigError(Exception):
