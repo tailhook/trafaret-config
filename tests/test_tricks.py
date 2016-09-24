@@ -1,4 +1,5 @@
 import unittest
+from collections import OrderedDict
 from textwrap import dedent
 
 import trafaret as T
@@ -10,18 +11,20 @@ class TestCall(unittest.TestCase):
 
     TRAFARET = T.Dict({
         T.Key("call", optional=True):
-            T.Call(lambda x: T.DataError({
-                "bad": "bad idea",
-                "anything": "another bad idea",
-            })),
+            # The following is the ordered dict because we want to obey order
+            # in the error messages. Otherwise, it could be normal dict as well
+            T.Call(lambda x: T.DataError(OrderedDict([
+                ("bad", "bad idea"),
+                ("anything", "another bad idea"),
+            ]))),
     })
 
     def test_call(self):
         self.assertEqual(get_err(self.TRAFARET, u"""
             call: "hello"
         """), dedent(u"""\
-            config.yaml:2: call.anything: another bad idea
             config.yaml:2: call.bad: bad idea
+            config.yaml:2: call.anything: another bad idea
         """))
 
 
