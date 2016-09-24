@@ -16,10 +16,26 @@ class TestCall(unittest.TestCase):
             })),
     })
 
-    def test_null(self):
+    def test_call(self):
         self.assertEqual(get_err(self.TRAFARET, u"""
             call: "hello"
         """), dedent(u"""\
             config.yaml:2: call.anything: another bad idea
             config.yaml:2: call.bad: bad idea
+        """))
+
+
+class TestForward(unittest.TestCase):
+
+    FWD = T.Forward()
+    TRAFARET = T.Dict({
+        T.Key("value", optional=True): FWD,
+    })
+    FWD << T.Int()
+
+    def test_int(self):
+        self.assertEqual(get_err(self.TRAFARET, u"""
+            value: "hello"
+        """), dedent(u"""\
+            config.yaml:2: value: value can't be converted to int
         """))
