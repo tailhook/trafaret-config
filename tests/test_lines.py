@@ -1,20 +1,8 @@
 import unittest
-from io import StringIO
 from textwrap import dedent
 
 import trafaret as T
-from trafaret_config import parse_and_validate, ConfigError
-
-
-
-def get_err(trafaret, text):
-    data = dedent(text)
-    try:
-        config = parse_and_validate(text, trafaret, filename='config.yaml')
-    except ConfigError as e:
-        buf = StringIO()
-        e.output(buf)
-        return buf.getvalue()
+from .util import get_err
 
 
 class TestSMTP(unittest.TestCase):
