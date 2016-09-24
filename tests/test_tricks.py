@@ -10,21 +10,30 @@ from .util import get_err
 class TestCall(unittest.TestCase):
 
     TRAFARET = T.Dict({
-        T.Key("call", optional=True):
+        T.Key("call_dict", optional=True):
             # The following is the ordered dict because we want to obey order
             # in the error messages. Otherwise, it could be normal dict as well
-            T.Call(lambda x: T.DataError(OrderedDict([
+            T.Call(lambda _: T.DataError(OrderedDict([
                 ("bad", "bad idea"),
                 ("anything", "another bad idea"),
             ]))),
+        T.Key("call_str", optional=True):
+            T.Call(lambda _: T.DataError("some error")),
     })
 
-    def test_call(self):
+    def test_call_dict(self):
         self.assertEqual(get_err(self.TRAFARET, u"""
-            call: "hello"
+            call_dict: "hello"
         """), dedent(u"""\
-            config.yaml:2: call.bad: bad idea
-            config.yaml:2: call.anything: another bad idea
+            config.yaml:2: call_dict.bad: bad idea
+            config.yaml:2: call_dict.anything: another bad idea
+        """))
+
+    def test_call_str(self):
+        self.assertEqual(get_err(self.TRAFARET, u"""
+            call_str: "hello"
+        """), dedent(u"""\
+            config.yaml:2: call_str: some error
         """))
 
 
