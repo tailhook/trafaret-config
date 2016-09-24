@@ -1,0 +1,42 @@
+minimum-bulk: v0.4.1
+
+versions:
+
+- file: setup.py
+  regex: ^\s*version\s*=\s*["']([^"']+)["']
+
+- file: trafaret_config/__init__.py
+  regex: ^__version__\s*=\s*["']([^"']+)["']
+
+- file: doc/conf.py
+  regex: ^version\s*=\s*u?["']([^"']+)["']
+  partial-version: ^\d+\.\d+
+
+- file: doc/conf.py
+  regex: ^release\s*=\s*u?["']([^"']+)["']
+
+- file: README.rst
+  regex: trafaret_config@(\S+)
+
+
+repositories:
+
+- kind: debian
+  suite: static
+  component: vagga
+  keep-releases: 1
+  match-version: ^\d+\.\d+\.\d+$
+  add-empty-i386-repo: true
+
+- kind: debian
+  suite: static
+  component: vagga-stable
+  keep-releases: 1000
+  match-version: ^\d+\.\d+\.\d+$
+  add-empty-i386-repo: true
+
+- kind: debian
+  suite: static
+  component: vagga-testing
+  keep-releases: 100
+  add-empty-i386-repo: true

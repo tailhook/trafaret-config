@@ -3,7 +3,7 @@ Configuration Loader
 ====================
 
 
-:Status: Alpha
+:Status: Beta
 
 
 This is a wrapper that loads yaml and checks config using trafaret_ while
@@ -35,3 +35,9 @@ above)::
 
 
 .. _trafaret: http://github.com/Deepwalker/trafaret
+
+Installation
+============
+
+::
+    pip install trafaret_config@0.1.0

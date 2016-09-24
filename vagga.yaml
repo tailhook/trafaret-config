@@ -17,8 +17,10 @@ containers:
     - !Alpine v3.4
     - !Repo edge/main
     - !Install [alpine-base, py-sphinx, make]
-    # If you require additional packages to build docs uncomment this
-    # - !Py2Requirements docs/requirements.txt
+    - &bulk !Tar
+      url: "http://files.zerogw.com/bulk/bulk-0.4.7.tar.gz"
+      sha256: faec9ee88ee079de3c7cfb95c5900489941b28b24b47411afaec1fae7a277546
+      path: /
 
 commands:
 
@@ -45,3 +47,8 @@ commands:
     epilog: |
       --------------------------------------------------------
       Documentation is built under doc/_build/html/index.html
+
+  bulk: !Command
+    description: Run arbitrary bulk command (maintains version number)
+    container: doc
+    run: [bulk]
