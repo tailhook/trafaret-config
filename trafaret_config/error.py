@@ -91,10 +91,10 @@ def _convert(parent_marks, prefix, err, data):
         marks = (cmarks.get(key) or cmarks.get(str(key)) or
                  cmarks.get('__self__') or parent_marks)
         if isinstance(getattr(suberror, 'error', None), dict):
-            if is_alter:
-                cur_data = data
-            else:
+            if not is_alter and isinstance(data, dict):
                 cur_data = data.get(key)
+            else:
+                cur_data = data
             for e in _convert(marks, kprefix, suberror, cur_data):
                 yield e
         else:
