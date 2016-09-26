@@ -16,7 +16,7 @@ versions:
   regex: ^release\s*=\s*u?["']([^"']+)["']
 
 - file: README.rst
-  regex: trafaret-config@(\S+)
+  regex: trafaret-config==(\S+)
 
 
 repositories:

@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='trafaret-config',
-      version='0.1.0',
+      version='0.1.1',
       description='A configuration library for python using trafaret and yaml',
       author='Paul Colomiets',
       author_email='paul@colomiets.name',
