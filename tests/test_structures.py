@@ -62,11 +62,3 @@ class TestTuple(unittest.TestCase):
         """), dedent(u"""\
             config.yaml:4: tuple[1]: value can't be converted to int
         """))
-
-
-class TestMappingOr(unittest.TestCase):
-
-    TRAFARET = T.Mapping(T.String, T.Dict({}) | T.Dict({}))
-
-    def test_items(self):
-        assert get_err(self.TRAFARET, u"""test: qwe""")

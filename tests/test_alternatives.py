@@ -144,3 +144,27 @@ class TestHardAlternatives(unittest.TestCase):
                 config.yaml:3: connection[1].path: path is not allowed key
                 config.yaml:3: connection[1].port: value can't be converted to int
             """))
+
+
+class TestMappingOr(unittest.TestCase):
+
+    TRAFARET = T.Mapping(T.String, T.Dict({}) | T.Dict({}))
+
+    if BEAUTY_ERROR:
+
+        def test_items(self):
+            self.assertEqual(
+                get_err(self.TRAFARET, u"""test: qwe"""),
+                dedent(u"""\
+                    config.yaml:1: test.value.<alternative 1>: value is not a dict
+                    config.yaml:1: test.value.<alternative 2>: value is not a dict
+                """))
+    else:
+
+        def test_items(self):
+            self.assertEqual(
+                get_err(self.TRAFARET, u"""test: qwe"""),
+                dedent(u"""\
+                    config.yaml:1: test.value[0]: value is not a dict
+                    config.yaml:1: test.value[1]: value is not a dict
+                """))

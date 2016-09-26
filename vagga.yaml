@@ -4,13 +4,13 @@ containers:
     setup:
     - !Alpine v3.4
     - !Install [ca-certificates]
-    - !Py3Install [pip]
+    - !Py3Install [pip, trafaret>=0.7.3]
     - !Sh "pip install -e ."
 
   py2:
     setup:
     - !Alpine v3.4
-    - !Py2Install [pip, setuptools]
+    - !Py2Install [pip, setuptools, trafaret>=0.7.3]
     - !Sh "pip install -e ."
 
   py3_c:
@@ -18,7 +18,7 @@ containers:
     - !Alpine v3.4
     - !BuildDeps [build-base, yaml-dev]
     - !Install [ca-certificates, yaml]
-    - !Py3Install [pip]
+    - !Py3Install [pip, trafaret>=0.7.3]
     - !Sh "pip install -e ."
 
   py2_c:
@@ -26,7 +26,16 @@ containers:
     - !Alpine v3.4
     - !BuildDeps [build-base, yaml-dev]
     - !Install [ca-certificates, yaml]
-    - !Py2Install [pip, setuptools]
+    - !Py2Install [pip, setuptools, trafaret>=0.7.3]
+    - !Sh "pip install -e ."
+
+  # Old trafaret, before 0.7.2 DataError().trafaret is available
+  py3-old:
+    setup:
+    - !Alpine v3.4
+    - !Install [ca-certificates]
+
+    - !Py3Install [pip, trafaret==0.7.2]
     - !Sh "pip install -e ."
 
   doc:
@@ -44,7 +53,7 @@ commands:
   test: !Command
     description: Run all the tests
     container: py3
-    prerequisites: [test-py2, test-py2c, test-py3, test-py3c]
+    prerequisites: [test-py2, test-py2c, test-py3, test-py3c, test-py3-old]
     run: [echo, 'ok']
 
   test-py2c: !Command
@@ -65,6 +74,11 @@ commands:
   test-py3: !Command
     description: Run tests for py3 (without C speedups)
     container: py3
+    run: [python3, -m, unittest, discover]
+
+  test-py3-old: !Command
+    description: Run tests for py3 with old trafaret
+    container: py3-old
     run: [python3, -m, unittest, discover]
 
   example: !Command
