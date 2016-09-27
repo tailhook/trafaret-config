@@ -4,6 +4,7 @@ Configuration Loader
 
 
 :Status: Beta
+:Documentation: http://trafaret-config.readthedocs.io/
 
 
 This is a wrapper that loads yaml and checks config using trafaret_ while
