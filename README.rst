@@ -42,7 +42,7 @@ Installation
 
 ::
 
-    pip install trafaret-config==0.1.1
+    pip install trafaret-config==1.0.0
 
 
 License
