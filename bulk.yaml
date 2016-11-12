@@ -17,26 +17,3 @@ versions:
 
 - file: README.rst
   regex: trafaret-config==(\S+)
-
-
-repositories:
-
-- kind: debian
-  suite: static
-  component: vagga
-  keep-releases: 1
-  match-version: ^\d+\.\d+\.\d+$
-  add-empty-i386-repo: true
-
-- kind: debian
-  suite: static
-  component: vagga-stable
-  keep-releases: 1000
-  match-version: ^\d+\.\d+\.\d+$
-  add-empty-i386-repo: true
-
-- kind: debian
-  suite: static
-  component: vagga-testing
-  keep-releases: 100
-  add-empty-i386-repo: true
