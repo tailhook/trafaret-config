@@ -1,9 +1,9 @@
-====================
-Configuration Loader
-====================
+===============
+Trafaret Config
+===============
 
 
-:Status: Beta
+:Status: Stable
 :Documentation: http://trafaret-config.readthedocs.io/
 
 
