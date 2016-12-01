@@ -16,7 +16,7 @@ Basic Usage:
 .. code-block:: python
 
    import trafaret
-   from trafaret_config import read_and_validate
+   from trafaret_config import ConfigError, read_and_validate
 
    TRAFARET = trafaret.Dict({'x': trafaret.String()})
 
