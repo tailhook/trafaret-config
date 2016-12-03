@@ -26,7 +26,7 @@ Contents
 Basic Usage
 -----------
 
-For easier real-life usage see `Command-Line`_ section.
+For easier real-life usage see :ref:`Command-Line` section.
 
 .. code-block:: python
 
