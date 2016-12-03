@@ -57,7 +57,6 @@ Low-level interface, without relying on argparse:
    import trafaret
    from trafaret_config import ConfigError, read_and_validate
 
-
    try:
        config = read_and_validate('config.yaml', TRAFARET)
    except ConfigError as e:

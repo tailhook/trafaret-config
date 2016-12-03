@@ -26,6 +26,8 @@ Contents
 Basic Usage
 -----------
 
+For easier real-life usage see `Command-Line`_ section.
+
 .. code-block:: python
 
    import trafaret
