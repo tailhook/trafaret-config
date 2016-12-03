@@ -78,7 +78,11 @@ def _convert(parent_marks, prefix, err, data):
                 yield ErrorLine([e.start_mark, e.end_mark], e.path,
                     '{} (where .{} is {!r})'.format(e.message, key, value))
             return
-    for key, suberror in err.error.items():
+    if isinstance(err.error, dict):
+        items = err.error.items()
+    else:
+        items = [('', err)]
+    for key, suberror in items:
         if is_alter:
             kprefix = prefix + '.<alternative {}>'.format(key+1)
         elif isinstance(key, int):
