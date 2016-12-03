@@ -8,7 +8,7 @@ from .error import ConfigError
 
 def standard_argparse_options(argument_parser, default_config):
     argument_parser.add_argument('-c', '--config', default=default_config,
-        help="Configuration file")
+        help="Configuration file (default: %(default)r)")
     argument_parser.add_argument('--print-config', action='store_true',
         help="Print config as it is read after parsing and exit")
     argument_parser.add_argument('-C', '--check-config', action='store_true',
