@@ -15,10 +15,48 @@ Basic Usage:
 
 .. code-block:: python
 
+    import argparse
+    import trafaret
+    from trafaret_config import commandline
+
+    TRAFARET = trafaret.Dict({'x': trafaret.String()})
+
+    def main():
+        ap = argparse.ArgumentParser()
+        commandline.standard_argparse_options(ap, default_config='config.yaml')
+        #
+        # define your command-line arguments here
+        #
+        options = ap.parse_args()
+        config = commandline.config_from_options(options, TRAFARET)
+        pprint.pprint(config)
+
+Example output when there is an error in config (from a `example.py` which
+has better trafaret than example above)::
+
+    bad.yaml:2: smtp.port: value can't be converted to int
+    bad.yaml:3: smtp.ssl_port: value can't be converted to int
+    bad.yaml:4: port: value can't be converted to int
+
+Help looks like this::
+
+    usage: example.py [-h] [-c CONFIG] [--print-config] [-C]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -c CONFIG, --config CONFIG
+                            Configuration file (default: 'config.yaml')
+      --print-config        Print config as it is read after parsing and exit
+      -C, --check-config    Check configuration and exit
+
+
+Low-level interface, without relying on argparse:
+
+.. code-block:: python
+
    import trafaret
    from trafaret_config import ConfigError, read_and_validate
 
-   TRAFARET = trafaret.Dict({'x': trafaret.String()})
 
    try:
        config = read_and_validate('config.yaml', TRAFARET)
@@ -26,13 +64,6 @@ Basic Usage:
        e.output()
        sys.exit(1)
 
-
-Example output (from a `test.py` which has better trafaret than example
-above)::
-
-    bad.yaml:2: smtp.port: value can't be converted to int
-    bad.yaml:3: smtp.ssl_port: value can't be converted to int
-    bad.yaml:4: port: value can't be converted to int
 
 
 .. _trafaret: http://github.com/Deepwalker/trafaret
