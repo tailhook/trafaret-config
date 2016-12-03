@@ -30,6 +30,7 @@ For easier real-life usage see :ref:`Command-Line` section.
 
 .. code-block:: python
 
+   import sys
    import trafaret
    from trafaret_config import read_and_validate
 

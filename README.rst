@@ -54,8 +54,11 @@ Low-level interface, without relying on argparse:
 
 .. code-block:: python
 
+   import sys
    import trafaret
    from trafaret_config import ConfigError, read_and_validate
+
+   TRAFARET = trafaret.Dict({'x': trafaret.String()})
 
    try:
        config = read_and_validate('config.yaml', TRAFARET)
