@@ -7,7 +7,7 @@ setup(name='trafaret-config',
       description='A configuration library for python using trafaret and yaml',
       author='Paul Colomiets',
       author_email='paul@colomiets.name',
-      url='http://github.com/tailhook/trafaret_config',
+      url='http://github.com/tailhook/trafaret-config',
       packages=['trafaret_config'],
       install_requires=[
         'PyYaml',
