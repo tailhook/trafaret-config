@@ -21,6 +21,7 @@ Contents
    simple_api
    error
    commandline
+   click
 
 
 Basic Usage
