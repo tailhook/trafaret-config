@@ -44,8 +44,8 @@ containers:
     - !Repo edge/main
     - !Install [alpine-base, py-sphinx, make]
     - &bulk !Tar
-      url: "http://files.zerogw.com/bulk/bulk-0.4.7.tar.gz"
-      sha256: faec9ee88ee079de3c7cfb95c5900489941b28b24b47411afaec1fae7a277546
+      url: "https://github.com/tailhook/bulk/releases/download/v0.4.10/bulk-v0.4.10.tar.gz"
+      sha256: 481513f8a0306a9857d045497fb5b50b50a51e9ff748909ecf7d2bda1de275ab
       path: /
 
 commands:
