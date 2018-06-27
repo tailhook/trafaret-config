@@ -17,8 +17,8 @@ class TestScalar(unittest.TestCase):
         T.Key("a_atom_list", optional=True): T.Atom(["x", "y"]),
         T.Key("a_enum_str", optional=True): T.Enum(["x", "y"]),
         T.Key("a_str", optional=True): T.String(max_length=12),
-        T.Key("a_email", optional=True): T.Email(),
-        T.Key("a_url", optional=True): T.URL(),
+        T.Key("a_email", optional=True): T.Email,
+        T.Key("a_url", optional=True): T.URL,
     })
 
     def test_null(self):

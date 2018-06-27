@@ -33,7 +33,7 @@ class TestSMTP(unittest.TestCase):
 class TestList(unittest.TestCase):
 
     TRAFARET = T.Dict({
-        "hosts": T.List(T.String(regex="\w+:\d+")),
+        "hosts": T.List(T.String() & T.Regexp("\w+:\d+")),
     })
 
     def test_ok(self):
@@ -50,7 +50,7 @@ class TestList(unittest.TestCase):
                 - cat:x
             """),
                  "config.yaml:3: hosts[1]: "
-                 "value does not match pattern: '\\\\w+:\\\\d+'\n"
+                 "does not match pattern \\w+:\\d+\n"
             )
 
 
