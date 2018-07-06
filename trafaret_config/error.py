@@ -8,9 +8,9 @@ MAX = float('inf')
 
 
 class ErrorLine(object):
-    __slots__ = ('start_mark', 'end_mark', 'path', 'message')
+    __slots__ = ('start_mark', 'end_mark', 'path', 'message', 'value')
 
-    def __init__(self, marks, path, message):
+    def __init__(self, marks, path, message, value):
         if marks:
             self.start_mark, self.end_mark = marks
         else:
@@ -18,6 +18,7 @@ class ErrorLine(object):
             self.end_mark = None
         self.path = path
         self.message = message
+        self.value = value
 
     def __str__(self):
         if self.start_mark:
@@ -34,6 +35,10 @@ class ErrorLine(object):
                 return '{}: {}'.format(self.path, self.message)
             else:
                 return 'CONFIG ERROR: {}'.format(self.message)
+
+    def hint(self):
+        if self.value and isinstance(self.value, (str, int, float)):
+            return '{!r}'.format(self.value)
 
 
 def _is_simple_or(traf, data):
@@ -102,7 +107,7 @@ def _convert(parent_marks, prefix, err, data):
             for e in _convert(marks, kprefix, suberror, cur_data):
                 yield e
         else:
-            yield ErrorLine(marks, kprefix, suberror)
+            yield ErrorLine(marks, kprefix, suberror, data.get(str(key)))
 
 
 def _err_sort_key(err):
@@ -138,3 +143,6 @@ class ConfigError(Exception):
             stream = sys.stderr
         for err in self.errors:
             stream.write(str(err) + u'\n')
+            hint = err.hint()
+            if hint:
+                stream.write('  -> ' + hint + u'\n')
