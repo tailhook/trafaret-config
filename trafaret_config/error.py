@@ -10,7 +10,7 @@ MAX = float('inf')
 class ErrorLine(object):
     __slots__ = ('start_mark', 'end_mark', 'path', 'message', 'value')
 
-    def __init__(self, marks, path, message, value):
+    def __init__(self, marks, path, message, value=None):
         if marks:
             self.start_mark, self.end_mark = marks
         else:
@@ -37,8 +37,13 @@ class ErrorLine(object):
                 return 'CONFIG ERROR: {}'.format(self.message)
 
     def hint(self):
-        if self.value and isinstance(self.value, (str, int, float)):
-            return '{!r}'.format(self.value)
+        value = self.value
+        if not value:
+            return
+        if isinstance(self.value, (str, int, float)):
+            return ['{!r}'.format(self.value)]
+        if hasattr(value, '_trafaret_config_hint'):
+            return value._trafaret_config_hint()
 
 
 def _is_simple_or(traf, data):
@@ -107,15 +112,16 @@ def _convert(parent_marks, prefix, err, data):
             for e in _convert(marks, kprefix, suberror, cur_data):
                 yield e
         else:
-            yield ErrorLine(marks, kprefix, suberror, data.get(str(key)))
+            hint = getattr(data, 'extra', {}).get(str(key), data.get(str(key)))
+            yield ErrorLine(marks, kprefix, suberror, hint)
 
 
 def _err_sort_key(err):
     mark = err.start_mark
     if mark:
-        return mark.name, mark.line, err.path
+        return mark.name, mark.line, err.path or ''
     else:
-        return 'zzzzzzzzzzzzzzz', MAX, err.path
+        return 'zzzzzzzzzzzzzzz', MAX, err.path or ''
 
 
 class ConfigError(Exception):
@@ -126,17 +132,22 @@ class ConfigError(Exception):
         super(ConfigError, self).__init__(self.errors[0])
 
     @classmethod
-    def from_data_error(ConfigError, err, orig_data):
+    def from_loader_errors(ConfigError):
+        return ConfigError(list(extra))
+
+    @classmethod
+    def from_data_error(ConfigError, err, orig_data, extra=[]):
         errs = list(_convert(None, '', err, orig_data))
+        errs.extend(extra)
         errs.sort(key=_err_sort_key)
         return ConfigError(errs)
 
     @classmethod
-    def from_scanner_error(ConfigError, err, filename):
+    def from_scanner_error(ConfigError, err, filename, extra=[]):
         return ConfigError([
             ErrorLine([err.problem_mark, err.problem_mark], None, err.problem),
             ErrorLine([err.problem_mark, err.problem_mark], None, err.context),
-            ])
+            ] + extra)
 
     def output(self, stream=None):
         if stream is None:
@@ -144,5 +155,5 @@ class ConfigError(Exception):
         for err in self.errors:
             stream.write(str(err) + u'\n')
             hint = err.hint()
-            if hint:
-                stream.write('  -> ' + hint + u'\n')
+            for line in hint or ():
+                stream.write('  -> ' + line + u'\n')
