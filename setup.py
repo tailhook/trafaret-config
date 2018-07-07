@@ -2,6 +2,11 @@
 
 from setuptools import setup
 
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(name='trafaret-config',
       version='2.0.0',
       description='A configuration library for python using trafaret and yaml',
@@ -18,10 +23,12 @@ setup(name='trafaret-config',
           'Programming Language :: Python :: 2',
           'Programming Language :: Python :: 2.7',
           'Programming Language :: Python :: 3',
-          'Programming Language :: Python :: 3.3',
-          'Programming Language :: Python :: 3.4',
           'Programming Language :: Python :: 3.5',
+          'Programming Language :: Python :: 3.6',
+          'Programming Language :: Python :: 3.7',
           'License :: OSI Approved :: MIT License',
           'License :: OSI Approved :: Apache Software License',
       ],
+      long_description=long_description,
+      long_description_content_type='text/markdown',
 )
