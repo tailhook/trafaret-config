@@ -92,7 +92,7 @@ Installation
 
 ::
 
-    pip install trafaret-config==1.0.1
+    pip install trafaret-config==2.0.0-beta.2
 
 
 License
