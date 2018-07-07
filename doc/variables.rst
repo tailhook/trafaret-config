@@ -24,3 +24,12 @@ any of the functions:
 * ``parse_and_validate(..., vars=custom_vars)``
 
 To turn off variable substitution at all pass ``vars=None``
+
+Sometimes you might want to print variables used in configuration file, i.e.
+to make some configuration file inter. If you're using
+``trafaret_config.commandline`` you can do it using default command-line
+argument::
+
+    $ ./run.py --print-config-vars
+    HOST
+    PORT

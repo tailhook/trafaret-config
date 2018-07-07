@@ -31,13 +31,14 @@ You can find `full example`_ in the repository.
 
 The ``--help`` looks like::
 
-    usage: example.py [-h] [-c CONFIG] [--print-config] [-C]
+    usage: example.py [-h] [-c CONFIG] [--print-config] [--print-config-vars] [-C]
 
     optional arguments:
       -h, --help            show this help message and exit
       -c CONFIG, --config CONFIG
                             Configuration file (default: 'config.yaml')
       --print-config        Print config as it is read after parsing and exit
+      --print-config-vars   Print variables used in configuration file
       -C, --check-config    Check configuration and exit
 
 .. _full example: https://github.com/tailhook/trafaret_config/blob/master/example.py

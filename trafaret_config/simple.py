@@ -82,6 +82,7 @@ class ConfigLoader(SafeLoader):
         SafeLoader.__init__(self, stream)
         self.__vars = expand_vars
         self.__errors = errors
+        self.__used_vars = set()
 
     def construct_yaml_map(self, node):
         data = ConfigDict({}, {}, {})
@@ -124,6 +125,7 @@ class ConfigLoader(SafeLoader):
             if not key:
                 key = match.group(2)
             replaced[key] = self.__vars.get(key)
+            self.__used_vars.add(key)
             try:
                 return self.__vars[key]
             except KeyError:
@@ -134,6 +136,9 @@ class ConfigLoader(SafeLoader):
                 return match.group(0)
         return VARS_REGEX.sub(replacer, value), SubstInfo(value, replaced)
 
+    def get_expanded_vars(self):
+        return set(self.__used_vars)
+
 
 ConfigLoader.add_constructor(
         'tag:yaml.org,2002:map',
@@ -143,9 +148,23 @@ ConfigLoader.add_constructor(
         'tag:yaml.org,2002:seq',
         ConfigLoader.construct_yaml_seq)
 
+
 def read_and_validate(filename, trafaret, vars=os.environ):
     with open(filename) as input:
         return _validate_input(input, trafaret, filename=filename, vars=vars)
+
+
+def read_and_get_vars(filename, trafaret, vars=os.environ):
+    with open(filename) as input:
+        errors = []
+        loader = ConfigLoader(input, vars, errors)
+        try:
+            loader.get_single_data()
+        except ScannerError as e:
+            raise ConfigError.from_scanner_error(e, filename, errors)
+        finally:
+            loader.dispose()
+        return loader.get_expanded_vars()
 
 
 def parse_and_validate(string, trafaret,
