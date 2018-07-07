@@ -1,6 +1,12 @@
 Trafaret-config Changes by Release
 ==================================
 
+v2.0.1
+------
+
+* Package metadata update only
+
+
 v2.0.0
 ------
 
