@@ -41,7 +41,7 @@ The ``--help`` looks like::
       --print-config-vars   Print variables used in configuration file
       -C, --check-config    Check configuration and exit
 
-.. _full example: https://github.com/tailhook/trafaret_config/blob/master/example.py
+.. _full example: https://github.com/tailhook/trafaret-config/blob/master/example.py
 
 Alternatively you can put configuration parameters into it's own option group:
 
