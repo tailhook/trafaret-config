@@ -1,4 +1,4 @@
-_trafaret: &trafaret trafaret==1.1.2
+_trafaret: &trafaret trafaret==1.2.0
 containers:
 
   py3:
