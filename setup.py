@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='trafaret-config',
-      version='2.0.0',
+      version='2.0.1b1',
       description='A configuration library for python using trafaret and yaml',
       author='Paul Colomiets',
       author_email='paul@colomiets.name',
