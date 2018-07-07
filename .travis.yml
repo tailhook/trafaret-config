@@ -1,5 +1,8 @@
 language: python
-matrix:
+install: "pip install -e ."
+script: nosetests
+
+jobs:
   include:
   - python: "2.7"
   - python: "3.5"
@@ -7,5 +10,15 @@ matrix:
   - python: "3.7"
     dist: xenial
     sudo: true
-install: "pip install -e ."
-script: nosetests
+  - stage: publish
+    python: "3.6"
+    script: true
+    deploy:
+      provider: pypi
+      user: pc
+      password:
+        secure: "yf/0JJDcEpZpU7Dc4rKQJ00Rzc9OhN3hzJTqMHzgaaRqaV/yUQZ23Lz2Mg2yJkMJ4YL5WWr8dQ8l+RkqeoeVAYueR05ekqM0Awm/pmvChRvWcc8v4vfTCND4mntHfLdSD/QWg5k7+tbbrYK7NxD+iDKZ4nxXlmiLTg0nLYSceFtcsP3SLaJC4jeIgTGc3KKTKeqKitSpZYj9rBPtrJYjBYG5qvKXo7PDIdGqLvvRlx5zRNeV01I7mEp0ORmo29+vkLdv8lcp/vgTGTimXzGDxH2g1rClAzAO8Tf1Yi9d5CHR95wYC1lnc2UsFxmSXJhHQHzHXPw7pRUtsE04sjQFh40rxJgAJ4o8qIe0TjNxwOxR5jNkBrcqFunJdYvW79FXIP49TbAxyMd1FmWDq6fMsiTk8LUcvqoHKDIH9gUXOYLx6WHMMaCn/vSWLdD8pnK1MaRyTwsGk+S8LMNnK2Q13c5DqhEKQTHqYnC+XPWdPHklVGGzBjPrraQ/cCisQZY0hSnfNWTAP8+UkSkXyotpmSJSYkBrJmwe7+gLvXFK6c26Pj2xx2o/EahB0wt0ctRx273c7D9wF+X98sz+0Ex0BXy5EX3C4+GnAXd4TI0sjO+3D21AlypSb3GzfVub+cKL6UATFhgFT1JvkkEiZMmdnsvUAzn3jz4VLD8rzINEidQ="
+      distributions: "sdist"
+      on:
+        tags: true
+        python: 3.6
