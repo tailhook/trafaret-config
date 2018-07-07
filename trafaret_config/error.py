@@ -5,6 +5,10 @@ import trafaret
 
 
 MAX = float('inf')
+try:
+    SCALAR_TYPES = (str, unicode, int, float)
+except NameError:
+    SCALAR_TYPES = (str, int, float)
 
 
 class ErrorLine(object):
@@ -40,8 +44,8 @@ class ErrorLine(object):
         value = self.value
         if value is None:
             return
-        if isinstance(value, (str, int, float)):
-            return [repr(value)]
+        if isinstance(value, SCALAR_TYPES):
+            return [repr(value).lstrip('u')]
         if hasattr(value, '_trafaret_config_hint'):
             return value._trafaret_config_hint()
 
@@ -136,8 +140,8 @@ class ConfigError(Exception):
         super(ConfigError, self).__init__(self.errors[0])
 
     @classmethod
-    def from_loader_errors(ConfigError):
-        return ConfigError(list(extra))
+    def from_loader_errors(ConfigError, error_list):
+        return ConfigError(list(error_list))
 
     @classmethod
     def from_data_error(ConfigError, err, orig_data, extra=[]):

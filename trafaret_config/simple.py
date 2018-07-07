@@ -14,12 +14,14 @@ except ImportError:
 from .error import ConfigError, ErrorLine
 
 
-VARS_REGEX = re.compile(r'\$(\w+)|\{([^}]+)\}')
+VARS_REGEX = re.compile(r'\$(\w+)|\$\{([^}]+)\}')
 
 try:
     STR_TYPES = (str, unicode)
+    UNICODE_TYPE = unicode
 except NameError:
     STR_TYPES = str
+    UNICODE_TYPE = str
 
 
 class ConfigDict(dict):
@@ -48,15 +50,16 @@ class SubstInfo(object):
 
     def _trafaret_config_hint(self):
         return (
-            [repr(self.original)] +
+            [repr(self.original).lstrip('u')] +
             [_format_var(k, v) for k, v in self.vars.items()]
         )
 
 
 def _format_var(key, value):
     if value is None:
-        return 'variable {} is undefined'.format(key)
+        return 'variable {} is undefined'.format(repr(key).lstrip('u'))
     else:
+        value = UNICODE_TYPE(value)
         if value.isdecimal():
             kind = 'numeric'
         elif value.isalnum():
@@ -69,8 +72,8 @@ def _format_var(key, value):
                 kind = 'alphanumeric'
         else:
             kind = 'various'
-        return 'variable {!r} is {} {} characters'.format(
-            key, len(value), kind)
+        return 'variable {} consists of {} {} characters'.format(
+            repr(key).lstrip('u'), len(value), kind)
 
 
 class ConfigLoader(SafeLoader):
@@ -125,7 +128,8 @@ class ConfigLoader(SafeLoader):
                 return self.__vars[key]
             except KeyError:
                 self.__errors.append(ErrorLine(
-                    marks, None, 'variable {!r} not found'.format(key),
+                    marks, None,
+                    'variable {} not found'.format(repr(key).lstrip('u')),
                     value))
                 return match.group(0)
         return VARS_REGEX.sub(replacer, value), SubstInfo(value, replaced)
@@ -169,3 +173,5 @@ def _validate_input(input, trafaret, filename, vars):
 
     if errors:
         raise ConfigError.from_loader_errors(errors)
+
+    return result
