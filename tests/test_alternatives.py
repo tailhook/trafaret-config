@@ -102,9 +102,12 @@ class TestHardAlternatives(unittest.TestCase):
                     port: http
             """), dedent(u"""\
                 config.yaml:3: connection.<alternative 1>.host: host is not allowed key
+                  -> 'localhost'
                 config.yaml:3: connection.<alternative 1>.path: is required
                 config.yaml:4: connection.<alternative 1>.port: port is not allowed key
+                  -> 'http'
                 config.yaml:4: connection.<alternative 2>.port: value can't be converted to int
+                  -> 'http'
             """))
 
         def test_unix(self):
@@ -115,8 +118,11 @@ class TestHardAlternatives(unittest.TestCase):
             """), dedent(u"""\
                 config.yaml:3: connection.<alternative 2>.host: is required
                 config.yaml:3: connection.<alternative 2>.path: path is not allowed key
+                  -> '/tmp/sock'
                 config.yaml:4: connection.<alternative 1>.port: port is not allowed key
+                  -> 'http'
                 config.yaml:4: connection.<alternative 2>.port: value can't be converted to int
+                  -> 'http'
             """))
 
     else:

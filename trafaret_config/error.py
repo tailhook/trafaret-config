@@ -38,10 +38,10 @@ class ErrorLine(object):
 
     def hint(self):
         value = self.value
-        if not value:
+        if value is None:
             return
-        if isinstance(self.value, (str, int, float)):
-            return ['{!r}'.format(self.value)]
+        if isinstance(value, (str, int, float)):
+            return [repr(value)]
         if hasattr(value, '_trafaret_config_hint'):
             return value._trafaret_config_hint()
 
@@ -112,7 +112,11 @@ def _convert(parent_marks, prefix, err, data):
             for e in _convert(marks, kprefix, suberror, cur_data):
                 yield e
         else:
-            hint = getattr(data, 'extra', {}).get(str(key), data.get(str(key)))
+            if isinstance(data, dict):
+                hint = getattr(data, 'extra', {}).get(str(key),
+                        data.get(str(key)))
+            else:
+                hint = None
             yield ErrorLine(marks, kprefix, suberror, hint)
 
 
@@ -156,4 +160,4 @@ class ConfigError(Exception):
             stream.write(str(err) + u'\n')
             hint = err.hint()
             for line in hint or ():
-                stream.write('  -> ' + line + u'\n')
+                stream.write(u'  -> ' + line + u'\n')

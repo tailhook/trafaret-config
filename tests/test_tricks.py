@@ -34,6 +34,7 @@ class TestCall(unittest.TestCase):
             call_str: "hello"
         """), dedent(u"""\
             config.yaml:2: call_str: some error
+              -> 'hello'
         """))
 
 
@@ -50,4 +51,5 @@ class TestForward(unittest.TestCase):
             value: "hello"
         """), dedent(u"""\
             config.yaml:2: value: value can't be converted to int
+              -> 'hello'
         """))

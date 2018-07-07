@@ -16,6 +16,11 @@ from .error import ConfigError, ErrorLine
 
 VARS_REGEX = re.compile(r'\$(\w+)|\{([^}]+)\}')
 
+try:
+    STR_TYPES = (str, unicode)
+except NameError:
+    STR_TYPES = str
+
 
 class ConfigDict(dict):
     __slots__ = ('marks', 'extra')
@@ -86,10 +91,12 @@ class ConfigLoader(SafeLoader):
                 marks[key_str] = cur_marks = [key.start_mark, value.end_mark]
                 if(self.__expand_vars is not None and
                        isinstance(value, ScalarNode)):
-                    val = data[key_str]
-                    if isinstance(val, str):
-                        data[key_str], ext = self.__expand_vars(val, cur_marks)
-                        data.extra[key_str] = ext
+                    val = self.construct_scalar(value)
+                    if isinstance(val, STR_TYPES):
+                        nval, ext = self.__expand_vars(val, cur_marks)
+                        if nval != val:
+                            data[key_str] = nval
+                            data.extra[key_str] = ext
         data.marks = marks
 
     def construct_yaml_seq(self, node):

@@ -25,8 +25,11 @@ class TestSMTP(unittest.TestCase):
             port: ???
         """),dedent("""\
             config.yaml:3: smtp.port: value can't be converted to int
+              -> 'unknown'
             config.yaml:4: smtp.ssl_port: value can't be converted to int
+              -> 'NaN'
             config.yaml:5: port: value can't be converted to int
+              -> '???'
         """))
 
 
