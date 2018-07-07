@@ -22,6 +22,8 @@ Contents
    error
    commandline
    click
+   variables
+   changelog
 
 
 Basic Usage

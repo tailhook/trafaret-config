@@ -34,9 +34,12 @@ Basic Usage:
 Example output when there is an error in config (from a `example.py` which
 has better trafaret than example above)::
 
-    bad.yaml:2: smtp.port: value can't be converted to int
-    bad.yaml:3: smtp.ssl_port: value can't be converted to int
-    bad.yaml:4: port: value can't be converted to int
+    bad.yaml:3: smtp.port: value can't be converted to int
+      -> 'unknown'
+    bad.yaml:4: smtp.ssl_port: value can't be converted to int
+      -> 'NaN'
+    bad.yaml:5: port: value can't be converted to int
+      -> '???'
 
 Help looks like this::
 
@@ -49,6 +52,19 @@ Help looks like this::
       --print-config        Print config as it is read after parsing and exit
       -C, --check-config    Check configuration and exit
 
+
+Since trafaret-config 2.0 environment variables in the config are replaced
+by default, this means that config like this:
+
+.. code-block:: yaml
+
+    url: http://${HOST}:$PORT/
+
+Will get ``HOST`` and ``PORT`` variables insert from the environment, and if
+variable does not exist, you will get the following error::
+
+    config.yaml:2: variable 'PORT' not found
+      -> 'http://${HOST}:$PORT/'
 
 Low-level interface, without relying on argparse:
 

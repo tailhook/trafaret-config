@@ -32,12 +32,11 @@ containers:
 
   doc:
     setup:
-    - !Alpine v3.8
-    - !Repo edge/main
+    - !Alpine v3.7
     - !Install [alpine-base, py-sphinx, make]
     - &bulk !Tar
-      url: "https://github.com/tailhook/bulk/releases/download/v0.4.10/bulk-v0.4.10.tar.gz"
-      sha256: 481513f8a0306a9857d045497fb5b50b50a51e9ff748909ecf7d2bda1de275ab
+      url: "https://github.com/tailhook/bulk/releases/download/v0.4.11/bulk-v0.4.11.tar.gz"
+      sha256: b718bb8448e726690c94d98d004bf7575f7a429106ec26ad3faf11e0fd9a7978
       path: /
 
 commands:
@@ -80,7 +79,7 @@ commands:
     work-dir: doc
     epilog: |
       --------------------------------------------------------
-      Documentation is built under doc/_build/html/index.html
+        xdg-open doc/_build/html/index.html
 
   bulk: !Command
     description: Run arbitrary bulk command (maintains version number)
