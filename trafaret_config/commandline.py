@@ -15,10 +15,10 @@ def standard_argparse_options(argument_parser, default_config):
         help="Check configuration and exit")
 
 
-def config_from_options(options, trafaret):
+def config_from_options(options, trafaret, vars=os.environ):
 
     try:
-        config = read_and_validate(options.config, trafaret)
+        config = read_and_validate(options.config, trafaret, vars=vars)
     except ConfigError as e:
         e.output()
         sys.exit(1)
