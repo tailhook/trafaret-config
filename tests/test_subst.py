@@ -47,3 +47,8 @@ class TestSubst(unittest.TestCase):
             config.yaml:2: variable 'PORT' not found
               -> 'http://${HOST}:$PORT/'
         """))
+
+    def test_no_subst(self):
+        self.assertEqual(get_ok(self.TRAFARET, u"""
+            a_str: http://${HOST}:$PORT/
+        """, None), {"a_str": "http://${HOST}:$PORT/"})

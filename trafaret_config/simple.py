@@ -93,8 +93,7 @@ class ConfigLoader(SafeLoader):
             if isinstance(key, ScalarNode):
                 key_str = self.construct_scalar(key)
                 marks[key_str] = cur_marks = [key.start_mark, value.end_mark]
-                if(self.__expand_vars is not None and
-                       isinstance(value, ScalarNode)):
+                if self.__vars is not None and isinstance(value, ScalarNode):
                     val = self.construct_scalar(value)
                     if isinstance(val, STR_TYPES):
                         nval, ext = self.__expand_vars(val, cur_marks)
@@ -110,8 +109,7 @@ class ConfigLoader(SafeLoader):
         marks = {'__self__': [node.start_mark, node.end_mark]}
         for idx, value in enumerate(node.value):
             marks[idx] = cur_marks = [value.start_mark, value.end_mark]
-            if(self.__expand_vars is not None and
-                   isinstance(value, ScalarNode)):
+            if self.__vars is not None and isinstance(value, ScalarNode):
                 val = data[idx]
                 if isinstance(val, str):
                     data[idx], ext = self.__expand_vars(val, cur_marks)
